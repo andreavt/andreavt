@@ -1,0 +1,175 @@
+///// Menu de Inicio 
+function onOpen() {
+  var spreadsheet = SpreadsheetApp.getActive();
+var menuItems = [
+//{name: "Actualizar Listados",  functionName : "ActualizarListados"}, 
+{name: "Mandar mail deudores MARZO",  functionName : "ListarMarzo"}, 
+{name: "Mandar mail deudores ABRIL",  functionName : "ListarAbril"}, 
+{name: "Mandar mail deudores MAYO", functionName : "ListarMayo"},
+{name: "Mandar mail deudores JUNIO",  functionName : "ListarJunio"},
+{name: "Mandar mail deudores JULIO",  functionName : "ListarJulio"},
+{name: "Mandar mail deudores AGOSTO",  functionName : "ListarAgosto"},
+{name: "Mandar mail deudores SEPTIEMBRE",  functionName : "ListarSeptiembre"},
+{name: "Mandar mail deudores OCTUBRE",  functionName : "ListarOctubre"},
+{name: "Mandar mail deudores NOVIEMBRE",  functionName : "ListarNoviembre"},
+{name: "Mandar mail deudores DICIEMBRE",  functionName : "ListarDiciembre"},
+
+//{name: "Listar TOTAL RECAUDADO",  functionName : "ArmarTotalesRecaudado"},
+
+//{name: "Enviar Mails NO ENVIADOS",  functionName : "RevisoMailsNoMandados"},
+//{name: "Enviar Mails con Recordatorio Depósito",  functionName : "EnviarRecordatorio"},
+//{name: "Enviar Mails con Recordatorio No Enviados",  functionName : "EnviarRecordatorioNoEnviados"},
+//{name: "Enviar Mail Informacion",  functionName : "EnviarEmailFestival"},
+//{name: "Enviar Mails Informacion No enviados",  functionName : "EnviarEmailFestivalNoEnviados"}  
+];
+spreadsheet.addMenu('PAGOS ALUMNOS', menuItems);
+}
+function ListarMarzo() {
+  EnviarMailFundacion("Marzo");
+  
+}
+function ListarAbril() {
+  EnviarMailFundacion("Abril");
+  
+}
+function ListarMayo() {
+  EnviarMailFundacion("Mayo");
+  
+}
+function ListarJunio() {
+ EnviarMailFundacion("Junio");
+  
+}
+function ListarJulio() {
+  EnviarMailFundacion("Julio");
+  
+}
+function ListarAgosto() {
+ // EnviarMailFundacion("Agosto");
+  
+}
+function ListarSeptiembre() {
+  EnviarMailFundacion("Septiembre");
+  
+}
+function ListarOctubre() {
+  EnviarMailFundacion("Octubre");
+  
+}
+function ListarNoviembre() {
+  EnviarMailFundacion("Noviembre");
+  
+}
+function ListarDiciembre() {
+  EnviarMailFundacion("Diciembre");
+  
+}
+
+function EnviarMailFundacion(mes) {
+
+
+ var ss = SpreadsheetApp.openById("id-de-la-hoja");
+ var hojaavisos = ss.getSheetByName("Aviso");
+ var range = hojaavisos.getRange("A3:A3");
+ var avisotexto = range.getCell(1, 1).getValue();
+ //ss.setActiveSheet(ss.getSheetByName("Prueba"));
+ //ss.setActiveSheet(ss.getSheetByName("Prueba"));
+
+ var deudames = "";
+ var indicemes = 0;
+switch (mes) {
+   case "Inscripcion":
+    console.log("Inscripcion");
+    indicemes == 6;
+    break;
+   case "Marzo":
+    console.log("Marzo");
+    indicemes = 7;
+    break;
+  case "Abril":
+    console.log("Abril");
+    indicemes = 8;
+    break;
+  case "Mayo":
+    console.log("Mayo");
+    indicemes = 9;
+    break;
+  case "Junio":
+    console.log("Junio");
+    indicemes = 10;
+    break;
+  case "Julio":
+    console.log("Julio");
+    indicemes = 11;
+    break;
+  case "Agosto":
+    console.log("Agosto");
+     indicemes = 12;
+    break;
+  case "Septiembre":
+    console.log("Septiembre");
+     indicemes = 13;
+    break;
+  case "Octubre":
+    console.log("Octubre");
+    indicemes = 14;
+    break;  
+  case "Noviembre":
+    console.log("Noviembre");
+    indicemes = 15;
+    break;
+   case "Diciembre":
+    console.log("Diciembre");
+    indicemes = 16;
+    break;
+  default:
+    console.log("No se selecciono Mes");
+    break;
+}
+ for (var j = 0;j<5;j++)
+ {
+ 
+ sheet = ss.getSheets()[j];
+ //var sheet = SpreadsheetApp.getActiveSheet();
+  SpreadsheetApp.getActive().getSheets()[j];
+  var num_row = sheet.getLastRow();
+      num_row += 1;
+     for(var i = 4 ;i < num_row ; ++i)
+    {
+       
+          
+        var dataRange = sheet.getRange(i,1,1,21);
+        var data = dataRange.getValues();
+        var rowData = data[0];
+        
+
+     // Logger.log("cual es la data : " + data[0] );
+     //  var string ="";
+      
+      
+	  
+	  // Busco los que no dicen Enviado
+      
+      Logger.log("row 6 : " + rowData[6] );
+	  //if (rowData[6] === '' && rowData[19] === ''  )
+    if (rowData[indicemes] === '' )
+      { 
+      
+       Logger.log("estoy adentro mail : " + rowData[1] );
+        var emailAddress = rowData[3];
+        var destinatario = rowData[1];
+        var mensaje1 = avisotexto;
+        var message = 'Estimada/o ' + destinatario + ',\n\n' + mensaje1 + ' ' + '\n'+'Saludos cordiales '+ ',\n\n'+ 'Equipo de FT ';  
+        var asunto = 'FUNDACION TEHUELCHE // '+destinatario+'  DEUDA '+mes;
+        var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
+         Logger.log("Remaining email quota: " + emailQuotaRemaining);  
+ if (emailQuotaRemaining >10) {
+   MailApp.sendEmail(emailAddress, asunto, message);
+   sheet.getRange(i,indicemes+1).setValue("Recordatorio ENVIADO");  }
+      
+      
+      }
+      
+    }
+ }
+}  
